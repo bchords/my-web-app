@@ -1,0 +1,15 @@
+name: wk2
+
+on:
+  workflow_run:
+    workflows: ["deploy"]
+    types:
+      - completed
+
+jobs:
+  swap_slots:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Swap production and staging slots
+        run: echo "Replace this with the actual command to swap slots"
