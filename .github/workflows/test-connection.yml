@@ -1,0 +1,17 @@
+name: Test Azure Connection
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Test Azure CLI
+      run: |
+        az account show
+        az webapp list --resource-group RG1 --output table
