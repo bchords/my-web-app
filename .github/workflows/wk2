@@ -11,5 +11,12 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Swap production and staging slots
-        run: echo "Replace this with the actual command to swap slots"
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}  # Set this secret in GitHub repository settings with Azure service principal credentials
+      - name: Swap Slots
+        run: |
+          az webapp deployment slot swap --resource-group my-web-app-2025_group --name my-web-app-2025
+  --slot staging --target-slot production
+          # Replace <resource-group-name>, <webapp-name>, and <staging-slot-name> with your actual values
