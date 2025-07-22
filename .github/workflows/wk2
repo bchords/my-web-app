@@ -1,22 +1,59 @@
-name: wk2
+name: wk2 - Production Slot Swap
 
 on:
   workflow_run:
-    workflows: ["deploy"]
+    workflows: ["deploy"]  # Replace "wk1" with the exact name of your wk1 workflow
     types:
       - completed
+    branches:
+      - main
 
 jobs:
-  swap_slots:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  swap-slots:
     runs-on: ubuntu-latest
+    # Only run if the triggering workflow completed successfully
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
     steps:
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}  # Set this secret in GitHub repository settings with Azure service principal credentials
-      - name: Swap Slots
-        run: |
-          az webapp deployment slot swap --resource-group my-web-app-2025_group --name my-web-app-2025
-  --slot staging --target-slot production
-          # Replace <resource-group-name>, <webapp-name>, and <staging-slot-name> with your actual values
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+    - name: Swap staging and production slots
+      run: |
+        # Replace these variables with your actual values
+        RESOURCE_GROUP="my-web-app-2025_group"
+        APP_SERVICE_NAME="my-web-app-2025"
+        SOURCE_SLOT="staging"  # The slot to swap FROM
+        TARGET_SLOT="production"  # The slot to swap TO
+        
+        echo "Starting slot swap from $SOURCE_SLOT to $TARGET_SLOT..."
+        
+        # Perform the slot swap
+        az webapp deployment slot swap \
+          --resource-group $RESOURCE_GROUP \
+          --name $APP_SERVICE_NAME \
+          --slot $SOURCE_SLOT \
+          --target-slot $TARGET_SLOT
+          
+        echo "Slot swap completed successfully!"
+        
+    - name: Verify deployment
+      run: |
+        # Optional: Add verification steps here
+        # For example, health checks or smoke tests
+        echo "Deployment verification completed"
+        
+    - name: Notify completion
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Production deployment completed successfully"
+        else
+          echo "❌ Production deployment failed"
+          exit 1
+        fi
