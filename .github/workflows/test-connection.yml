@@ -14,4 +14,4 @@ jobs:
     - name: Test Azure CLI
       run: |
         az account show
-        az webapp list --resource-group RG1 --output table
+        az webapp list --resource-group my-web-app-2025_group --output table
