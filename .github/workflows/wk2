@@ -2,7 +2,7 @@ name: wk2 - Production Slot Swap
 
 on:
   workflow_run:
-    workflows: ["deploy"]  # Replace "wk1" with the exact name of your wk1 workflow
+    workflows: ["Deploy to Azure"]  # Replace "wk1" with the exact name of your wk1 workflow
     types:
       - completed
     branches:
