@@ -1,5 +1,5 @@
 version: v0.1
-testName: AppService152744507-StagingLoadTest
+testName: my-web-app-2025-staging
 testPlan: test1.jmx
 description: Load test for staging slot validation
 engineInstances: 1
@@ -14,11 +14,11 @@ failureCriteria:
 
 autoStop:
   errorPercentage: 80
-  timeWindow: 60
+  timeWindow: 10
 
 env:
   - name: webapp_url
-    value: my-web-app-2025-hxh4fwbpd5c4cea8.uksouth-01.azurewebsites.net
+    value: https://my-web-app-2025-staging-cyhzghehbeeyhsc8.uksouth-01.azurewebsites.net/
   - name: threads
     value: 10
   - name: rampup
