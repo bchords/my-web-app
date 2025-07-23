@@ -1,0 +1,27 @@
+version: v0.1
+testName: AppService152744507-StagingLoadTest
+testPlan: test1.jmx
+description: Load test for staging slot validation
+engineInstances: 1
+
+configurationFiles:
+  - test1.jmx
+
+failureCriteria:
+  - avg(response_time_ms) > 200
+  - percentage(error) > 80
+  - avg(latency) > 10000
+
+autoStop:
+  errorPercentage: 80
+  timeWindow: 60
+
+env:
+  - name: webapp_url
+    value: my-web-app-2025-hxh4fwbpd5c4cea8.uksouth-01.azurewebsites.net
+  - name: threads
+    value: 10
+  - name: rampup
+    value: 60
+  - name: duration  
+    value: 300
