@@ -18,7 +18,7 @@ autoStop:
 
 env:
   - name: webapp_url
-    value: appservice152744507-staging.azurewebsites.net
+    value: my-web-app-2025-hxh4fwbpd5c4cea8.uksouth-01.azurewebsites.net
   - name: threads
     value: 10
   - name: rampup
