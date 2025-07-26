@@ -1,0 +1,35 @@
+name: wk1
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+jobs:
+  deploy-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Deploy to Staging
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: my-web-app-2025
+          slot-name: staging
+          package: .
+      - name: Install Load Testing Extension
+        run: az extension add --name load --yes
+      - name: Run Load Test
+        uses: azure/load-testing@v1
+        with:
+          loadTestConfigFile: test1.yml
+          resourceGroup: my-web-app-2025_group
+          loadTestResource: load-testing-resource-name
+      - name: Upload Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: loadTestResults
+          path: loadTest/results.zip
+      - name: Update JMX
+        run: sed -i 's/HTTPSample.domain=.*/HTTPSample.domain=test1.jmx/' test1.jmx
