@@ -18,6 +18,10 @@ jobs:
           app-name: my-web-app-2025
           slot-name: staging
           package: .
+      - name: Install Load Testing Extension
+        run: |
+          az extension add --name load --yes --upgrade
+          az extension list --output table
       - name: Run Load Test
         run: az load-test run --resource-group resource-group-name --load-test-resource load-testing-resource-name --test-id ebd72e5b-7599-4d82-bfaa-c86dac638005 --config-file test1.yml
       - name: Upload Results
