@@ -17,12 +17,26 @@ jobs:
         app-name: 'my-web-app-2025'
         slot-name: 'staging'
         package: '.'
-    - run: sed -i 's/HTTPSample\.domain">[^<]*/HTTPSample.domain">appservice152744507-staging.azurewebsites.net/g' test1.jmx
+    - run: sed -i 's/HTTPSample\.domain">[^<]*/HTTPSample.domain">my-web-app-2025-staging-cyhzghehbeeyhsc8.uksouth-01.azurewebsites.net/g' test1.jmx
     - run: |
         az extension add --name load
-        az load test create --test-id staging-test --load-test-config-file test1.yml --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
-        az load test-run create --test-id staging-test --test-run-id run-${{ github.run_number }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
-    - run: az load test-run download --test-id staging-test --test-run-id run-${{ github.run_number }} --path ./results --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
+        az load test create \
+          --test-id staging-test \
+          --load-test-resource loadTestResults \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --load-test-config-file test1.yml
+        az load test-run create \
+          --test-id staging-test \
+          --load-test-resource loadTestResults \
+          --test-run-id run-${{ github.run_number }} \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
+    - run: |
+        az load test-run download \
+          --test-id staging-test \
+          --load-test-resource loadTestResults \
+          --test-run-id run-${{ github.run_number }} \
+          --path ./results \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
       if: always()
     - uses: actions/upload-artifact@v4
       if: always()
