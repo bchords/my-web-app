@@ -21,7 +21,7 @@ jobs:
       - name: Run Load Test
         run: az load-test run --resource-group resource-group-name --load-test-resource load-testing-resource-name --test-id ebd72e5b-7599-4d82-bfaa-c86dac638005 --config-file test1.yml
       - name: Upload Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: loadTestResults
           path: loadTest/results.zip
