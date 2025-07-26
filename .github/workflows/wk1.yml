@@ -17,4 +17,3 @@ jobs:
         app-name: 'my-web-app-2025'
         slot-name: 'staging'
         package: '.'
-    
