@@ -15,7 +15,7 @@ jobs:
       - name: Deploy to Staging
         uses: azure/webapps-deploy@v3
         with:
-          app-name: AppService152744507
+          app-name: my-web-app-2025
           slot-name: staging
           package: .
       - name: Install Load Testing Extension
