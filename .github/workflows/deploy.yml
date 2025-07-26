@@ -1,8 +1,8 @@
 name: Deploy to Azure
+
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened]
 
 jobs:
   deploy-and-test:
