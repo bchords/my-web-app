@@ -15,17 +15,13 @@ jobs:
       - name: Deploy to Staging
         uses: azure/webapps-deploy@v3
         with:
-          app-name: my-web-app-2025
+          app-name: AppService152744507
           slot-name: staging
           package: .
       - name: Install Load Testing Extension
         run: az extension add --name load --yes
       - name: Run Load Test
-        uses: azure/load-testing@v1
-        with:
-          loadTestConfigFile: test1.yml
-          resourceGroup: my-web-app-2025_group
-          loadTestResource: load-testing-resource-name
+        run: az load-test run --resource-group my-web-app-2025_group --load-test-resource load-testing-resource-name --test-id ebd72e5b-7599-4d82-bfaa-c86dac638005 --config-file test1.yml
       - name: Upload Results
         uses: actions/upload-artifact@v4
         with:
