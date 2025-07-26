@@ -1,32 +1,29 @@
-name: Deploy to Azure 
-
+name: Deploy to Azure
 on:
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened]
 
 jobs:
   deploy-and-test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - uses: azure/webapps-deploy@v3
-      with:
-        app-name: 'my-web-app-2025'
-        slot-name: 'staging'
-        package: '.'
-    - run: sed -i 's/HTTPSample\.domain">[^<]*/HTTPSample.domain">my-web-app-2025-staging-cyhzghehbeeyhsc8.uksouth-01.azurewebsites.net/g' test1.jmx
-     
-    - run: |
-        az extension add --name load
-        az load test create --test-id staging-test --load-test-config-file test1.yml --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
-        az load test-run create --test-id staging-test --test-run-id run-${{ github.run_number }} --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
-    - run: az load test-run download --test-id staging-test --test-run-id run-${{ github.run_number }} --path ./results --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }}
-      if: always()
-    - uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: loadTestResults
-        path: ./results
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Deploy to Staging
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: my-web-app-2025
+          slot-name: staging
+          package: .
+      - name: Run Load Test
+        run: az load-test run --resource-group resource-group-name --load-test-resource load-testing-resource-name --test-id ebd72e5b-7599-4d82-bfaa-c86dac638005 --config-file test1.yml
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: loadTestResults
+          path: loadTest/results.zip
+      - name: Update JMX
+        run: sed -i 's/HTTPSample.domain=.*/HTTPSample.domain=test1.jmx/' test1.jmx
