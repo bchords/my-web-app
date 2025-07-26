@@ -2,7 +2,7 @@ name: wk2
 
 on:
   workflow_run:
-    workflows: Deploy to Azure 
+    workflows: wk1
     types:
       - completed
 
