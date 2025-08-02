@@ -1,6 +1,6 @@
 name: wk1
 
-on:
+#on:
   pull_request:
     branches: [main]
 
