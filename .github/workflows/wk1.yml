@@ -1,8 +1,8 @@
 name: wk1
 
-#on:
-  pull_request:
-    branches: [main]
+on:
+   workflow_dispatch:
+   
 
 jobs:
   deploy-and-test:
